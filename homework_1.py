@@ -1,14 +1,46 @@
 import os
 import requests
+import json
 from pprint import pprint
 from dotenv import load_dotenv
 
 load_dotenv('./.env')
 
+# task 1 Посмотреть документацию к API GitHub,
+# разобраться как вывести список репозиториев для конкретного пользователя,
+# сохранить JSON-вывод в файле *.json; написать функцию, возвращающую(return) список репозиториев.
+
+
+def get_repo(user, url='https://api.github.com/user/repos'):
+
+    token = os.getenv('GIT_API_TOKEN')
+    username = user
+    repos = requests.get(url, auth=(username, token))
+
+    filename = 'repo_data.json'
+    with open(filename, "w") as f:
+        json.dump(repos.json(), f, indent=4)
+
+    repo_list = []
+    for repo in repos.json():
+        if not repo['private']:
+            repo_list.append(repo['html_url'])
+
+    return repo_list
+
+
+pprint(get_repo('SenzOne'))
+
+# task 2 Зарегистрироваться на https://openweathermap.org/api
+# написать функцию, которая получает погоду в данный момент для города,
+# название которого получается через input. https://openweathermap.org/current
+
 
 def get_weather(city, url='http://api.openweathermap.org/data/2.5/weather'):
+
     """Takes a required city argument, and an optional link to openweather.com
        returns a string with city name and temperature """
+
     token = os.getenv("WEATHER_API_TOKEN", None)
     params = {
         'q': city,
@@ -23,5 +55,5 @@ def get_weather(city, url='http://api.openweathermap.org/data/2.5/weather'):
     print(f'В городе {city_name} сейчас {temp}')
 
 
-get_weather(str(input('Введи название города: ')))  # Moscow, Samara, Sochi
+get_weather(str(input('Введите название города: ')))  # Moscow, Samara, Sochi
 
