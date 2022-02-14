@@ -7,7 +7,8 @@ load_dotenv('./.env')
 
 
 def get_weather(city, url='http://api.openweathermap.org/data/2.5/weather'):
-    ''' '''
+    """Takes a required city argument, and an optional link to openweather.com
+       returns a string with city name and temperature """
     token = os.getenv("WEATHER_API_TOKEN", None)
     params = {
         'q': city,
